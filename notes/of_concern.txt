@@ -1,0 +1,12 @@
+/enc_data/eddata/pacemaker/png/1862755_6803824-2138-07-30-0435-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/1927379_6369041-2162-04-14-1647-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/2239766_6468573-2013-08-18-0122-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/2481398_5932528-2189-01-26-1135-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/2599751_6073903-2125-07-10-1052-POSTERO-ANTERIOR.png
+/enc_data/eddata/pacemaker/png/2601050_6014899-2196-04-02-0034-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/2610013_6283252-2013-01-25-0804-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/2623612_6111681-2104-06-28-2304-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/2657431_7154404-2163-08-27-1132-ANTERO-POSTERIOR.png
+/enc_data/eddata/pacemaker/png/279689_6892226-2200-10-29-1155-ANTERO-POSTERIOR.png
+
+
