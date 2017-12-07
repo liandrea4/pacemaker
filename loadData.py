@@ -14,7 +14,7 @@ from keras.preprocessing.image import img_to_array, load_img
 
 
 def getScaledDims(currshape, ratio):
-	""" Scale images with current shape to new ratio """
+    """ Scale images with current shape to new ratio """
     w,h = currshape
     currratio = h/float(w)
     
@@ -26,14 +26,14 @@ def getScaledDims(currshape, ratio):
         return (new_w, h)
 
 def cropCenter(img,cropy,cropx):
-	""" Center crop images to new height and new width, specified by cropy, cropx """
+    """ Center crop images to new height and new width, specified by cropy, cropx """
     y, x = img.shape
     startx = x//2-(cropx//2)
     starty = y//2-(cropy//2)    
     return img[starty:starty+cropy, startx:startx+cropx]
 
 def loadImage(image_path, ratio):
-	""" Returns a np matrix with ratio of dimensions specified by ratio """
+    """ Returns a np matrix with ratio of dimensions specified by ratio """
     img = plt.imread(image_path)
     currshape = img.shape
     cropx, cropy = getScaledDims(currshape, ratio)
@@ -41,7 +41,7 @@ def loadImage(image_path, ratio):
     return newimg
 
 def resizeImage(image, dims):
-	""" Resizes the image into dimensions specified by dims and converts img to 3 channels """
+    """ Resizes the image into dimensions specified by dims and converts img to 3 channels """
     newimg = resize(image, dims)
     
     # Convert from 1 channel to 3 channels
@@ -65,15 +65,15 @@ def loadTrueClass(path, number, dims):
     return x_True
 
 def main():
-	dirPath = '/enc_data/eddata/pacemaker'
-	dataPath = os.path.join(dirPath, 'organized-data')
-	pacemakerPath = os.path.join(dirPath,"png/full_image/*.png")
+    dirPath = '/enc_data/eddata/pacemaker'
+    dataPath = os.path.join(dirPath, 'organized-data')
+    pacemakerPath = os.path.join(dirPath,"png/full_image/*.png")
 
-	allPatients = os.listdir(dataPath)
-	print('Number of patients: {}'.format(len(allPatients)))
-	numTrueFiles = len(glob.glob(pacemakerPath))
-	print('Number of pacemaker files: {}'.format(numTrueFiles))
+    allPatients = os.listdir(dataPath)
+    print('Number of patients: {}'.format(len(allPatients)))
+    numTrueFiles = len(glob.glob(pacemakerPath))
+    print('Number of pacemaker files: {}'.format(numTrueFiles))
 
-	x_True = loadTrueClass(pacemakerPath, numTrueFiles, (225, 255))
-	pickle.dump(x_True, open( "x_true.p", "wb" ) )
+    x_True = loadTrueClass(pacemakerPath, numTrueFiles, (225, 255))
+    pickle.dump(x_True, open( "x_true.p", "wb" ) )
 
