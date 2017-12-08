@@ -46,7 +46,7 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 	model = Model(inputs=base_model.input, outputs=predictions)
 	# print(model.summary())
 
-	k = 5 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is
+	k = 12 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is
 	layers = base_model.layers[:-k] if k != 0 else base_model.layers
 	for layer in layers: 
 	    layer.trainable = False
