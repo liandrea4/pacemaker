@@ -46,7 +46,7 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 	model = Model(inputs=base_model.input, outputs=predictions)
 	# print(model.summary())
 
-	k = 5 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is
+	k = 12 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is (8+4)
 	layers = base_model.layers[:-k] if k != 0 else base_model.layers
 	for layer in layers: 
 	    layer.trainable = False
@@ -56,56 +56,17 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 	model.compile(loss = "categorical_crossentropy", optimizer = opt, metrics=["accuracy"])
 
 	# Initiate the train, validation and test generators with data augumentation
-	train_datagen = ImageDataGenerator(
-		rescale = 1./255,
-		horizontal_flip = True,
-		vertical_flip = True, 
-		rotation_range=90,
-		zoom_range=0.3,
-		fill_mode='nearest',
-	)
+	train_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
 	train_datagen.fit(X_train)
-	generator = train_datagen.flow(
-		X_train, 
-		y_train, 
-		batch_size=batch_size, 
-		save_to_dir='/enc_data/eddata/pacemaker/augmented/train/',
-		save_format='png'
-	)
+	generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
 
-	val_datagen = ImageDataGenerator(
-		rescale = 1./255,
-		horizontal_flip = True,
-		vertical_flip = True, 
-		rotation_range=90,
-		zoom_range=0.3,
-		fill_mode='nearest',
-	)
+	val_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
 	val_datagen.fit(X_val)
-	val_generator = val_datagen.flow(
-		X_val, 
-		y_val, 
-		batch_size=batch_size, 
-		save_to_dir='/enc_data/eddata/pacemaker/augmented/train/',
-		save_format='png'
-	)
+	val_generator = val_datagen.flow(X_val, y_val, batch_size=batch_size)
 
-	test_datagen = ImageDataGenerator(
-		rescale = 1./255,
-		horizontal_flip = True,
-		vertical_flip = True, 
-		rotation_range=90,
-		zoom_range=0.3,
-		fill_mode='nearest',
-	)
+	test_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
 	test_datagen.fit(X_test)
-	test_generator = test_datagen.flow(
-		X_test, 
-		y_test, 
-		batch_size=batch_size, 
-		save_to_dir='/enc_data/eddata/pacemaker/augmented/train/',
-		save_format='png'
-	)
+	test_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 
 	# Train the model, auto terminating when val_acc stops increasing after 10 epochs.
