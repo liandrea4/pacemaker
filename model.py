@@ -33,14 +33,14 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 	print("y_train, y_val, y_test: ", y_train.shape, y_val.shape, y_test.shape)
 
 	# Create the base pre-trained model
-	base_model = VGG16(input_shape=(224, 224, 1), weights='imagenet', include_top=False)
+	base_model = VGG16(input_shape=(224, 224, 3), weights='imagenet', include_top=False)
 
 	x = base_model.output
-	# x = Flatten()(x)
+	x = Flatten()(x)
 	x = Dense(2048, activation='relu')(x)
 	x = Dropout(.7)(x)
-	# x = Dense(2048, activation='relu')(x)
-	predictions = Dense(3, activation='softmax')(x)
+	x = Dense(2048, activation='relu')(x)
+	predictions = Dense(num_classes, activation='softmax')(x)
 
 	model = Model(inputs=base_model.input, outputs=predictions)
 	# print(model.summary())
