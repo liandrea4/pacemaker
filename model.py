@@ -2,6 +2,9 @@ import numpy as np
 import os
 import pickle
 
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
+
 from sklearn.model_selection 		 import train_test_split
 from keras.applications.vgg16 		 import VGG16
 from keras.preprocessing.image       import ImageDataGenerator
@@ -38,33 +41,32 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 
 	x = base_model.output
 	x = Flatten()(x)
-	x = Dense(2048, activation='relu')(x)
-	x = Dropout(.7)(x)
-	x = Dense(2048, activation='relu')(x)
+# 	x = Dense(2048, activation='relu')(x)
+# 	x = Dropout(.7)(x)
+# 	x = Dense(2048, activation='relu')(x)
 	predictions = Dense(num_classes, activation='softmax')(x)
 
 	model = Model(inputs=base_model.input, outputs=predictions)
-	# print(model.summary())
-
-	k = 12 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is (8+4)
+	k = 1 # number of end layers to retrain
 	layers = base_model.layers[:-k] if k != 0 else base_model.layers
 	for layer in layers: 
 	    layer.trainable = False
+	print(model.summary())
 
 	# Compile model
 	opt = SGD(lr=0.0001, momentum=0.9)
 	model.compile(loss = "categorical_crossentropy", optimizer = opt, metrics=["accuracy"])
 
 	# Initiate the train, validation and test generators with data augumentation
-	train_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
+	train_datagen = ImageDataGenerator(rotation_range=45, zoom_range=.3, rescale = 1./255, horizontal_flip = True)
 	train_datagen.fit(X_train)
 	generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
 
-	val_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
+	val_datagen = ImageDataGenerator(rotation_range=45, zoom_range=.3, rescale = 1./255, horizontal_flip = True)
 	val_datagen.fit(X_val)
 	val_generator = val_datagen.flow(X_val, y_val, batch_size=batch_size)
 
-	test_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
+	test_datagen = ImageDataGenerator(rotation_range=45, zoom_range=.3, rescale = 1./255, horizontal_flip = True)
 	test_datagen.fit(X_test)
 	test_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
