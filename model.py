@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import pickle
 
 from sklearn.model_selection 		 import train_test_split
 from keras.applications.vgg16 		 import VGG16
@@ -57,21 +58,21 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 	# Initiate the train, validation and test generators with data augumentation
 	train_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
 	train_datagen.fit(X_train)
-	generator = train_datagen.flow(X_train, y_train, batch_size=32)
+	generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
 
 	val_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
 	val_datagen.fit(X_val)
-	val_generator = val_datagen.flow(X_val, y_val, batch_size=32)
+	val_generator = val_datagen.flow(X_val, y_val, batch_size=batch_size)
 
 	test_datagen = ImageDataGenerator(rescale = 1./255, horizontal_flip = True, vertical_flip = True)
 	test_datagen.fit(X_test)
-	test_generator = test_datagen.flow(X_test, y_test, batch_size=32)
+	test_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 
 	# Train the model, auto terminating when val_acc stops increasing after 10 epochs.
-	callback = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=2, mode='max') 
-	hist = model.fit_generator(generator, steps_per_epoch=len(X_train) / batch_size, epochs=num_epochs, verbose=1, callbacks=[callback],
-						validation_data=val_generator, validation_steps=len(X_val)/batch_size)
+	# callback = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=2, mode='max') 
+    # , callbacks=[callback],
+	hist = model.fit_generator(generator, steps_per_epoch=len(X_train) / batch_size , epochs=num_epochs, verbose=1, validation_data=val_generator, validation_steps=len(X_val)/batch_size)
 
 	# Save accuracy / loss during training to pickle file so we can plot later
 	pickle.dump(hist.history, open(pickle_filename, 'wb'))
