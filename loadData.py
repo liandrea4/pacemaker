@@ -45,7 +45,7 @@ def resizeImage(image, dims):
     newimg = resize(image, dims)
     
     # Convert from 1 channel to 3 channels
-    newimg_3d = np.empty(imgdims + (3,))
+    newimg_3d = np.empty(dims + (3,))
     for i in range(3):
         newimg_3d[:,:,i] = newimg
         
@@ -74,6 +74,6 @@ def main():
     numTrueFiles = len(glob.glob(pacemakerPath))
     print('Number of pacemaker files: {}'.format(numTrueFiles))
 
-    x_True = loadTrueClass(pacemakerPath, numTrueFiles, (225, 255))
+    x_True = loadTrueClass(pacemakerPath, 50, (225, 255))
     pickle.dump(x_True, open( "x_true.p", "wb" ) )
 
