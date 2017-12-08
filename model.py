@@ -12,11 +12,7 @@ from keras.utils                     import np_utils
 from keras                           import backend as K
 
 # only use GPUID == 1
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
-
-# X = np.array(x_True + x_False)
-# Y = np.array(y_True + y_False)
-# print X.shape, Y.shape
+# os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50): 
 
