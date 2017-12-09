@@ -103,3 +103,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+x_neg.p
+x_true.p
+full_hist.pkl
+full_model.h5
