@@ -2,6 +2,9 @@ import numpy as np
 import os
 import pickle
 
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
+
 from sklearn.model_selection 		 import train_test_split
 from keras.applications.vgg16 		 import VGG16
 from keras.preprocessing.image       import ImageDataGenerator
@@ -40,18 +43,17 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 
 	x = base_model.output
 	x = Flatten()(x)
-	# x = Dense(2048, activation='relu')(x)
-	# x = Dropout(.7)(x)
-	# x = Dense(2048, activation='relu')(x)
+# 	x = Dense(2048, activation='relu')(x)
+# 	x = Dropout(.7)(x)
+# 	x = Dense(2048, activation='relu')(x)
 	predictions = Dense(num_classes, activation='softmax')(x)
 
 	model = Model(inputs=base_model.input, outputs=predictions)
-	# print(model.summary())
-
-	k = 5 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is
+	k = 1 # number of end layers to retrain
 	layers = base_model.layers[:-k] if k != 0 else base_model.layers
 	for layer in layers: 
 	    layer.trainable = False
+	print(model.summary())
 
 	# Compile model
 	opt = SGD(lr=0.0001, momentum=0.9)
@@ -59,30 +61,30 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 
 	# Initiate the train, validation and test generators with data augumentation
 	train_datagen = ImageDataGenerator(
-		rescale = 1./255,
+        rescale = 1./255,
 		horizontal_flip = True,
 		vertical_flip = True, 
 		rotation_range=90,
 		zoom_range=0.3,
-		fill_mode='nearest',
-	)
+		fill_mode='nearest'
+    )
 	train_datagen.fit(X_train)
 	generator = train_datagen.flow(
-		X_train, 
+        X_train, 
 		y_train, 
 		batch_size=batch_size, 
 		save_to_dir='/enc_data/eddata/pacemaker/augmented/train/',
 		save_format='png'
-	)
+    )
 
 	val_datagen = ImageDataGenerator(
-		rescale = 1./255,
+        rescale = 1./255,
 		horizontal_flip = True,
 		vertical_flip = True, 
 		rotation_range=90,
 		zoom_range=0.3,
 		fill_mode='nearest',
-	)
+    )
 	val_datagen.fit(X_val)
 	val_generator = val_datagen.flow(
 		X_val, 
@@ -108,7 +110,6 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 		save_to_dir='/enc_data/eddata/pacemaker/augmented/test/',
 		save_format='png'
 	)
-
 
 	# Train the model, auto terminating when val_acc stops increasing after 10 epochs.
 	# callback = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=2, mode='max') 
