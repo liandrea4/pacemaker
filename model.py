@@ -25,6 +25,8 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 	print('Train shape: ', X_train.shape, y_train.shape)
 	print('Val shape: ', X_val.shape, y_val.shape)
 	print('Test shape: ', X_test.shape, np.array(y_test).shape)
+    
+    
 
 	# Categorize the labels
 	num_classes = 2
@@ -38,15 +40,15 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 
 	x = base_model.output
 	x = Flatten()(x)
-	x = Dense(2048, activation='relu')(x)
-	x = Dropout(.7)(x)
-	x = Dense(2048, activation='relu')(x)
+	# x = Dense(2048, activation='relu')(x)
+	# x = Dropout(.7)(x)
+	# x = Dense(2048, activation='relu')(x)
 	predictions = Dense(num_classes, activation='softmax')(x)
 
 	model = Model(inputs=base_model.input, outputs=predictions)
 	# print(model.summary())
 
-	k = 12 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is
+	k = 5 # number of end layers to retrain CHANGE THIS ALISTAIR SAID TO RETRAIN THE LAST CNN5(?) idk how many layers that is
 	layers = base_model.layers[:-k] if k != 0 else base_model.layers
 	for layer in layers: 
 	    layer.trainable = False
@@ -86,7 +88,7 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 		X_val, 
 		y_val, 
 		batch_size=batch_size, 
-		save_to_dir='/enc_data/eddata/pacemaker/augmented/train/',
+		save_to_dir='/enc_data/eddata/pacemaker/augmented/val/',
 		save_format='png'
 	)
 
@@ -103,7 +105,7 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 		X_test, 
 		y_test, 
 		batch_size=batch_size, 
-		save_to_dir='/enc_data/eddata/pacemaker/augmented/train/',
+		save_to_dir='/enc_data/eddata/pacemaker/augmented/test/',
 		save_format='png'
 	)
 
@@ -111,14 +113,14 @@ def run(X, Y, pickle_filename, model_filename, batch_size=32, num_epochs=50):
 	# Train the model, auto terminating when val_acc stops increasing after 10 epochs.
 	# callback = EarlyStopping(monitor='val_acc', min_delta=0, patience=10, verbose=2, mode='max') 
     # , callbacks=[callback],
-	hist = model.fit_generator(generator, steps_per_epoch=len(X_train) / batch_size , epochs=num_epochs, verbose=1, validation_data=val_generator, validation_steps=len(X_val)/batch_size)
+	hist = model.fit_generator(val_generator, steps_per_epoch=len(X_val) / batch_size , epochs=num_epochs, verbose=1, validation_data=val_generator, validation_steps=len(X_val)/batch_size)
 
 	# Save accuracy / loss during training to pickle file so we can plot later
-	pickle.dump(hist.history, open(pickle_filename, 'wb'))
+	# pickle.dump(hist.history, open(pickle_filename, 'wb'))
 
 	# Evalulate model
-	test_loss, accuracy = model.evaluate_generator(test_generator, X_test.shape[0])
+	test_loss, accuracy = model.evaluate_generator(val_generator, X_val.shape[0])
 	print('Test loss: ', test_loss, ' Accuracy: ', accuracy)
 
 	# Save model
-	model.save(model_filename)
+	# model.save(model_filename)
