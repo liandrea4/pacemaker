@@ -1,0 +1,2 @@
+train on X_train, test on X_test: 0.9750
+train on X_train, val on X_val, test on X_test: 0.9917
