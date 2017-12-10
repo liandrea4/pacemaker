@@ -1,12 +1,14 @@
 inception: 
 train on X_train, test on X_test, epochs=10: 0.9750
 train on X_train, val on X_val, test on X_test, epochs=10: 0.9917
+train on X_train, val on X_val, test on X_test, epochs=20: 0.9500
 train on generator, val on X_val, test on X_test, epochs=10: 0.8333
 train on generator, val on X_val, test on X_test, epochs=20: 0.5250
 
 vgg: 
 train on X_train, test on X_test, epochs=10: 0.9833 
-train on X_train, val on X_val, test on X_test, epochs=10: 0.9833 
+train on X_train, val on X_val, test on X_test, epochs=10: 0.9833
+train on X_train, val on X_val, test on X_test, epochs=20: 0.9917 
 train on generator, val on X_val, test on X_test, epochs=10: 0.5667
 
 
